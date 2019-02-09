@@ -56,9 +56,10 @@
 	          onEachFeature: function (feature, layer) {
 		  layer.bindPopup("This is a GPS <br>" + photoImg);}
 		  });
-          var   markers = L.markerClusterGroup();
-	  markers.addLayer(datalayer);
-	  map.addLayer(markers)
+         L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
+         // var   markers = L.markerClusterGroup();
+	 // markers.addLayer(datalayer);
+	 // map.addLayer(markers)
 	  });
 
         // Vectorfield animations
