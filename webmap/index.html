@@ -1,39 +1,164 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset=utf-8 />
-  <title>Showing an ArcGIS basemap</title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <title>Mer de glace ice flow</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="//unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+</head>
 
-    <!-- Load Leaflet from CDN -->
-    <link rel="stylesheet" href="//unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-    integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-    crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
-    integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
-    crossorigin=""></script>
+<body>
+    <div id="map"></div>
 
+    <!-- CDN -->
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="//npmcdn.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.0/chroma.min.js"></script>
 
-    <!-- Load Esri Leaflet from CDN -->
-    <script src="//unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"
+    <!-- Plugins -->
+    <!-- raster layers -->
+    <script src="https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js"></script>
+    
+    <!-- esri basemaps -->
+    <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"
     integrity="sha512-YZ6b5bXRVwipfqul5krehD9qlbJzc6KOGXYsDjU9HHXW2gK57xmWl2gU6nAegiErAqFXhygKIsWPKbjLPXVb2g=="
     crossorigin=""></script>
 
+    <script>
+        let map = L.map("map");
+        
+	// esri basemaps 
+        imagery=L.esri.basemapLayer('Imagery');
+	labels=L.esri.basemapLayer('ImageryLabels');
+	im_bm=L.layerGroup([imagery,labels]).addTo(map);
 
-  <style>
-    body { margin:0; padding:0; }
-    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
-  </style>
-</head>
-<body>
+	tp_bm=L.esri.basemapLayer('Topographic');
+      
+        // Put a scale
+        L.control.scale({imperial:false}).addTo(map);
 
-<div id="map"></div>
+        // Vectorfield animations
+        d3.text('data/UMdg.asc', function (u) {
+            d3.text('data/VMdg.asc', function (v) {
+	        // get vector component
+                let vf = L.VectorField.fromASCIIGrids(u, v, 1.0); 
+                var range = [0,500]
+                var scale = chroma.scale('YlOrRd').domain(range);
 
-<script>
-  var map = L.map('map').setView([39, -97.5], 4);
+                // Simple colorbar
+                var bar = L.control.colorBar(scale, range, {
+                    title: 'surface velocity (m/a)',
+                    units: 'm/a',
+                    steps: 100,
+                    decimals: 1,
+                    width: 150,
+                    height: 5,
+                    position: 'bottomright',
+                    background: '#000',
+                    textColor: 'white',
+                    labels: [range[0],range[1]/4,range[1]/2,3*range[1]/4,range[1]],
+                    labelFontSize: 8
+                });
+                
+                // a) get magnitude
+                const s = vf.getScalarField('magnitude'); // << derived ScalarField
+                const magnitude = L.canvasLayer.scalarField(s, {
+                    color: scale,
+                    opacity: 0.65,
+                });
 
-  L.esri.basemapLayer('Streets').addTo(map);
-</script>
+                // b) get vector animation 
+                let layer = L.canvasLayer.vectorFieldAnim(vf, {
+                    paths: 1000,
+                    color: scale,
+                    width: 2,
+                    maxAge: 400 ,
+                    fade: 0.98,
+                    velocityScale: 1 / 1000000,
+                    mouseMoveCursor: null
+                });
 
+		// center map on raster layer
+                map.fitBounds(layer.getBounds());
+                
+                // control button
+                L.control.layers({
+		   "Imagery": im_bm,
+		   "Topographic": tp_bm,
+		}, {
+                    "Vector animation": layer,
+                    "Derived magnitude": magnitude,
+                }, {
+                        position: 'topright',
+                        collapsed: false
+                    }).addTo(map);
+
+   //  create a custom control to ad a title and credential to the map
+   // https://stackoverflow.com/questions/28316273/mapbox-map-styling-for-description-box/28319456#28319456
+              var MyCustomControl = L.Control.extend({
+                  options: {
+                   // Default control position
+                     position: 'topright'
+                   },
+                  onAdd: function (map) {
+                   // Create a container with classname and return it
+                   return L.DomUtil.create('div', 'my-custom-control');
+                   },
+                  setContent: function (content) {
+                  // Set the innerHTML of the container
+                  this.getContainer().innerHTML = content;
+                  }
+               });
+
+              var myCustomControl =  new MyCustomControl().addTo(map);
+               
+	      // interaction when layer turn on/off 
+               map.on('overlayadd', function (eventLayer) {
+                 if (eventLayer.name === 'Derived magnitude') {
+		  // add legend
+                  bar.addTo(map);
+		  // if vector animation is on; put it on top with cyan color
+                  if (map.hasLayer(layer)) {
+                    map.removeLayer(layer);
+                    layer.addTo(map);
+                    layer.options.color = 'cyan';
+                  }
+                 } else if (eventLayer.name === 'Vector animation') {
+                   myCustomControl.setContent('Ice flow surface velocities');
+                   if (map.hasLayer(magnitude)) {layer.options.color = 'cyan'}
+                   else {layer.options.color = scale}
+                 }
+                });
+                map.on('overlayremove', function (eventLayer) {
+               // Switch to the Permafrost legend...
+                 if (eventLayer.name === 'Derived magnitude') {
+                  map.removeControl(bar);
+                  if (map.hasLayer(layer)) {layer.options.color = scale}
+                 } else if (eventLayer.name === 'Vector animation') {
+		   myCustomControl.setContent('');
+		 }
+                });
+                
+                
+                // get velocity by clicking on layer
+                layer.on('click', function (e) {
+                    if (e.value !== null) {
+                        let vector = e.value;
+                        let v = vector.magnitude().toFixed(2);
+                        let d = vector.directionTo().toFixed(0);
+                        let html = (`<span class="popupText">${v} m/a </span>`);
+                        let popup = L.popup()
+                            .setLatLng(e.latlng)
+                            .setContent(html)
+                            .openOn(map);
+                    }
+                });
+
+            });
+        });
+    </script>
 </body>
+
 </html>
