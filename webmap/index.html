@@ -52,6 +52,7 @@
 	//var photoImg = '<img src="data/picture.jpg" height="150px" width="150px"/>';
 
 	var geojsonFeature=$.getJSON('data/points.geojson', function(data) {
+	     console.log(data);
 	     datalayer = L.geoJson(data, {
 	          onEachFeature: function (feature, layer) {
 		  layer.bindPopup("This is a GPS <br>");}
