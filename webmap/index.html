@@ -49,7 +49,8 @@
         L.control.scale({imperial:false}).addTo(map);
 
         // test importing geoJson data
-	//var photoImg = '<img src="data/picture.jpg" height="150px" width="150px"/>';
+	var photoImg = '<img src="data/picture.jpg" height="150px" width="150px"/>';
+
 var data = {
 "type": "FeatureCollection",
 "features": [
@@ -62,7 +63,7 @@ var data = {
 	     console.log(data);*/
 	     datalayer = L.geoJson(data, {
 	          onEachFeature: function (feature, layer) {
-		  layer.bindPopup("This is a GPS <br>");}
+		  layer.bindPopup("This is a GPS <br>" + photoImg);}
 		  });
          L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
          // var   markers = L.markerClusterGroup();
