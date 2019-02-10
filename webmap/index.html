@@ -51,12 +51,12 @@
         // test importing geoJson data
 	//var photoImg = '<img src="data/picture.jpg" height="150px" width="150px"/>';
 
-	var geojsonFeature=$.getJSON("data/points.geojson", function(data) {
+	var geojsonFeature=$.getJSON('data/points.geojson', function(data) {
 	     datalayer = L.geoJson(data, {
 	          onEachFeature: function (feature, layer) {
 		  layer.bindPopup("This is a GPS <br>");}
 		  });
-         L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
+        // L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
          // var   markers = L.markerClusterGroup();
 	 // markers.addLayer(datalayer);
 	 // map.addLayer(markers)
