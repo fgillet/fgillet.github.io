@@ -62,11 +62,21 @@ var data = {
 ]
 }
 
-	     datalayer = L.geoJson(data, {
+/*	     datalayer = L.geoJson(data, {
 	          onEachFeature: function (feature, layer) {
 		  layer.bindPopup( "I am a GPS <br> I am not here but on <br>" + '<a href="http://astrolabe.osug.fr/index.php" target="_blank" >the Astrolabe Glacier </a> <br>' + photoImg);}
 		  });
-         L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
+         L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer); */
+
+ 	var geojsonFeature=$.getJSON('data/points.geojson', function(data) {
+			     console.log(data);
+			     console.log(JSON.stringify(data));
+		     	     datalayer = L.geoJson(data, {
+		     	          onEachFeature: function (feature, layer) {
+		  		  layer.bindPopup("This is a GPS <br>");}
+		  		  });
+	L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
+        });
 
         // Vectorfield animations
         d3.text('data/Velocity_U.asc', function (u) {
