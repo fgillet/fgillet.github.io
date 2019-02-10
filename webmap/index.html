@@ -50,18 +50,25 @@
 
         // test importing geoJson data
 	//var photoImg = '<img src="data/picture.jpg" height="150px" width="150px"/>';
+var data = {
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "id": 2 }, "geometry": { "type": "Point", "coordinates": [ 6.934985551668341, 45.889501279930627 ] } },
+{ "type": "Feature", "properties": { "id": 1 }, "geometry": { "type": "Point", "coordinates": [ 6.926500189642945, 45.875363204725623 ] } }
+]
+}
 
-	var geojsonFeature=$.getJSON('data/points.geojson', function(data) {
-	     console.log(data);
+	/*var geojsonFeature=$.getJSON("data/points.geojson", function(data) {
+	     console.log(data);*/
 	     datalayer = L.geoJson(data, {
 	          onEachFeature: function (feature, layer) {
 		  layer.bindPopup("This is a GPS <br>");}
 		  });
-        // L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
+         L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
          // var   markers = L.markerClusterGroup();
 	 // markers.addLayer(datalayer);
 	 // map.addLayer(markers)
-	  });
+	  //});
 
         // Vectorfield animations
         d3.text('data/UMdg.asc', function (u) {
