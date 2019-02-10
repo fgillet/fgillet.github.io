@@ -64,7 +64,7 @@ var data = {
 
 	     datalayer = L.geoJson(data, {
 	          onEachFeature: function (feature, layer) {
-		  layer.bindPopup("This is a GPS <br>" + photoImg);}
+		  layer.bindPopup( "I am a GPS <br> I am not here but on <br>" + '<a href="http://astrolabe.osug.fr/index.php" target="_blank" >the Astrolabe Glacier </a> <br>' + photoImg);}
 		  });
          L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
 
