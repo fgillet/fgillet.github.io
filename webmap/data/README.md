@@ -20,8 +20,8 @@
 #ogr2ogr -append -update combined.shp PATH_TO_SECOND_FILE/bound1.shp 
 
 ## get velocities in EPSG 4326 , and clip with shape file
-#gdalwarp -overwrite  -s_srs EPSG:32632 -t_srs EPSG:4326 -q -cutline combined.shp -dstnodata 0.0 Velocity_NorthSouth.tif Velocity_V.tif
-#gdalwarp -overwrite  -s_srs EPSG:32632 -t_srs EPSG:4326 -q -cutline combined.shp -dstnodata 0.0 Velocity_EastWest.tif Velocity_U.tif
+#gdalwarp -overwrite  -s_srs EPSG:32632 -t_srs EPSG:4326 -te 6.879 45.839 7.045 45.98 -tr 0.00022 0.00022 -q -cutline combined.shp -dstnodata 0.0 Velocity_NorthSouth.tif Velocity_V.tif
+#gdalwarp -overwrite  -s_srs EPSG:32632 -t_srs EPSG:4326 -te 6.879 45.839 7.045 45.98 -tr 0.00022 0.00022 -q -cutline combined.shp -dstnodata 0.0 Velocity_EastWest.tif Velocity_U.tif
 
 ## convert to asc
 #gdal_translate -of AAIGrid   Velocity_V.tif Velocity_V.asc
