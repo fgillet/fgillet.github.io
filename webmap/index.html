@@ -147,8 +147,8 @@
                   bar.addTo(map);
 		  // if vector animation is on; put it on top with cyan color
                   if (map.hasLayer(layer)) {
-                    //map.removeLayer(layer);
-                    //layer.addTo(map);
+                    map.removeLayer(layer);
+                    layer.addTo(map);
                     layer.options.color = 'cyan';
                   }
                  } else if (eventLayer.name === 'Vector animation') {
