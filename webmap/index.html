@@ -157,8 +157,8 @@
        "Topographic": tp_bm,
      }
      var groupedOverlays = {
-       "": {"Vector animation": layer},
       "Rasters": {
+        "Vector animation": layer,
         "Velocity magnitude": magnitude,
         "Thickness": thlayer,
      },
@@ -169,7 +169,7 @@
       var options = {
       // Make the "Landmarks" group exclusive (use radio inputs)
       // issue unable to unselect teh raster when it has been checked once
-        exclusiveGroups: ["Rasters"],
+        //exclusiveGroups: ["Rasters"],
       // Show a checkbox next to non-exclusive group labels for toggling all
         groupCheckboxes: false,
       //
@@ -204,6 +204,18 @@
       var myCustomControl =  new MyCustomControl().addTo(map);
 
     // interaction when layer turn on/off
+    map.on('overlayremove', function (eventLayer) {
+      // Switch to the Permafrost legend...
+      if (eventLayer.name === 'Velocity magnitude') {
+         map.removeControl(bar);
+         if (map.hasLayer(layer) && !map.hasLayer(thlayer)) {layer.options.color = scale};
+      } else if (eventLayer.name === 'Thickness') {
+           map.removeControl(thbar);
+           if (map.hasLayer(layer)&& !map.hasLayer(magnitude)) {layer.options.color = scale};
+      } else if (eventLayer.name === 'Vector animation') {
+           myCustomControl.setContent('');
+      }
+    });
         map.on('overlayadd', function (eventLayer) {
           if (eventLayer.name === 'Velocity magnitude') {
             // add legend
@@ -213,10 +225,6 @@
               map.removeLayer(layer);
               layer.addTo(map);
               layer.options.color = 'cyan';}
-          } else if (eventLayer.name === 'Vector animation') {
-            myCustomControl.setContent('Ice flow surface velocities');
-            if (map.hasLayer(magnitude)) {layer.options.color = 'cyan'}
-            else {layer.options.color = scale}
           } else if (eventLayer.name === 'Thickness') {
             thbar.addTo(map);
             // if vector animation is on; put it on top with cyan color
@@ -224,20 +232,13 @@
               map.removeLayer(layer);
               layer.addTo(map);
               layer.options.color = 'cyan';}
+          } else if (eventLayer.name === 'Vector animation') {
+            myCustomControl.setContent('Ice flow surface velocities');
+            if (map.hasLayer(magnitude)||map.hasLayer(thlayer)) {layer.options.color = 'cyan'}
+            else {layer.options.color = scale}
           }
          });
-        map.on('overlayremove', function (eventLayer) {
-          // Switch to the Permafrost legend...
-          if (eventLayer.name === 'Velocity magnitude') {
-             map.removeControl(bar);
-             if (map.hasLayer(layer)) {layer.options.color = scale}
-          } else if (eventLayer.name === 'Vector animation') {
-		           myCustomControl.setContent('');
-          } else if (eventLayer.name === 'Thickness') {
-               map.removeControl(thbar);
-          }
 
-        });
 
     // get velocity by clicking on layer
         magnitude.on('click', function (e) {
