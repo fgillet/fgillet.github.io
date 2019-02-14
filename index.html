@@ -4,6 +4,13 @@
    <link rel="stylesheet" href="styles.css">
 </head>
 
+<style>
+   html,body { height: 100% }
+   .parent {  width:100%; height:80%; }
+   .parent iframe {  width:90%; height:100%; border:0;overflow:hidden }
+</style>
+
+
 <body>
 
    <h1>Glacier studies</h1>
@@ -12,12 +19,7 @@
    </p>
 
    <div class='parent'>
-        <iframe 
-        id="inlineFrameExample"
-        title="Inline Frame Example"
-        width="700"
-	height="600"
-        src="webmap/"> </iframe>
+        <iframe id="inlineFrame" title="Argentiere Webmap" src="webmap/"> </iframe>
    </div>
 
 
