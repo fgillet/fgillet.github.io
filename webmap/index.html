@@ -46,6 +46,15 @@
 	          zoom: 12,
 	          });
 
+// show coordinates for right click
+  map.on("contextmenu", function (event) {
+      let html = (`<span class="popupText">lat,lon: ${event.latlng.lat.toFixed(3)}, ${event.latlng.lng.toFixed(3)}  </span>`);
+      let popup = L.popup()
+                   .setLatLng(event.latlng)
+                   .setContent(html)
+                   .openOn(map);
+  });
+
 // Put a metric scale
   L.control.scale({imperial:false}).addTo(map);
 
