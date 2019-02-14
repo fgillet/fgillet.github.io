@@ -67,6 +67,45 @@
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
         });
 
+// Thickness
+  var thlayer = [];
+  var thbar = [];
+  d3.text("data/THICKNESS_EPSG4326.asc", function (asc) {
+    let th = L.ScalarField.fromASCIIGrid(asc);
+    var range = [0,450];
+    var scale = chroma.scale('Spectral').domain(range);
+    thlayer = L.canvasLayer.scalarField(th, {
+          color: scale,
+          mouseMoveCursor: null,
+          opacity: 0.85,
+        });
+    // get thickness
+    thlayer.on('click', function (e) {
+      if (e.value !== null) {
+        let v = e.value.toFixed(3);
+        let html = (`<span class="popupText">thickness: ${v} m </span>`);
+        let popup = L.popup()
+                     .setLatLng(e.latlng)
+                     .setContent(html)
+                     .openOn(map);}
+      });
+
+     thbar = L.control.colorBar(scale, range, {
+                title: 'thickness (m)',
+                units: 'm',
+                steps: 100,
+                decimals: 1,
+                width: 150,
+                height: 5,
+                position: 'bottomright',
+                background: '#000',
+                textColor: 'white',
+                labels: [range[0],range[1]/4,range[1]/2,3*range[1]/4,range[1]],
+                labelFontSize: 8
+                });
+
+   });
+
 // Vectorfield animations
   d3.text('data/Velocity_U.asc', function (u) {
     d3.text('data/Velocity_V.asc', function (v) {
@@ -90,23 +129,23 @@
                 labelFontSize: 8
                 });
 
-                // a) get magnitude
-                const s = vf.getScalarField('magnitude'); // << derived ScalarField
-                const magnitude = L.canvasLayer.scalarField(s, {
-                    color: scale,
-                    opacity: 0.65,
-                });
+    // a) get magnitude
+      const s = vf.getScalarField('magnitude'); // << derived ScalarField
+      const magnitude = L.canvasLayer.scalarField(s, {
+               color: scale,
+               opacity: 0.65,
+            });
 
-                // b) get vector animation
-                let layer = L.canvasLayer.vectorFieldAnim(vf, {
-                    paths: 1000,
-                    color: scale,
-                    width: 2,
-                    maxAge: 400 ,
-                    fade: 0.98,
-                    velocityScale: 1 / 1000000,
-                    mouseMoveCursor: null
-                });
+   // b) get vector animation
+       let layer = L.canvasLayer.vectorFieldAnim(vf, {
+               paths: 1000,
+               color: scale,
+               width: 2,
+               maxAge: 400 ,
+               fade: 0.98,
+               velocityScale: 1 / 1000000,
+               mouseMoveCursor: null
+            });
 
     // control button
       L.control.layers({
@@ -114,6 +153,7 @@
 		     "Topographic": tp_bm,},{
          "Vector animation": layer,
          "Velocity magnitude": magnitude,
+         "Thickness": thlayer,
 		     "Tools": datalayer,},{
          position: 'topright',
          collapsed: false
@@ -148,24 +188,34 @@
           } else if (eventLayer.name === 'Vector animation') {
             myCustomControl.setContent('Ice flow surface velocities');
             if (map.hasLayer(magnitude)) {layer.options.color = 'cyan'}
-            else {layer.options.color = scale}}
+            else {layer.options.color = scale}
+          } else if (eventLayer.name === 'Thickness') {
+            thbar.addTo(map);
+            // if vector animation is on; put it on top with cyan color
+            if (map.hasLayer(layer)) {
+              map.removeLayer(layer);
+              layer.addTo(map);
+              layer.options.color = 'cyan';}
+          }
          });
         map.on('overlayremove', function (eventLayer) {
           // Switch to the Permafrost legend...
           if (eventLayer.name === 'Velocity magnitude') {
              map.removeControl(bar);
              if (map.hasLayer(layer)) {layer.options.color = scale}
-             } else if (eventLayer.name === 'Vector animation') {
-		           myCustomControl.setContent('');}
+          } else if (eventLayer.name === 'Vector animation') {
+		           myCustomControl.setContent('');
+          } else if (eventLayer.name === 'Thickness') {
+               map.removeControl(thbar);
+          }
+
         });
 
     // get velocity by clicking on layer
-        layer.on('click', function (e) {
+        magnitude.on('click', function (e) {
          if (e.value !== null) {
-           let vector = e.value;
-           let v = vector.magnitude().toFixed(2);
-           let d = vector.directionTo().toFixed(0);
-           let html = (`<span class="popupText">${v} m/a </span>`);
+           let v = e.value.toFixed(3);
+           let html = (`<span class="popupText">velocity: ${v} m/a </span>`);
            let popup = L.popup()
                        .setLatLng(e.latlng)
                        .setContent(html)
