@@ -82,7 +82,7 @@
     // get thickness
     thlayer.on('click', function (e) {
       if (e.value !== null) {
-        let v = e.value.toFixed(3);
+        let v = e.value.toFixed(0);
         let html = (`<span class="popupText">thickness: ${v} m </span>`);
         let popup = L.popup()
                      .setLatLng(e.latlng)
@@ -214,7 +214,7 @@
     // get velocity by clicking on layer
         magnitude.on('click', function (e) {
          if (e.value !== null) {
-           let v = e.value.toFixed(3);
+           let v = e.value.toFixed(1);
            let html = (`<span class="popupText">velocity: ${v} m/a </span>`);
            let popup = L.popup()
                        .setLatLng(e.latlng)
