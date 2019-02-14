@@ -11,6 +11,7 @@
   <link rel "stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,400" />
   <link rel="stylesheet" href="//unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="//unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="dist/leaflet.groupedlayercontrol.min.css" />
 </head>
 
 <body>
@@ -23,8 +24,10 @@
   <!-- markercluster  -->
   <script src="//unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster-src.js"></script>
   <script src="//unpkg.com/leaflet.markercluster.layersupport@2.0.1/dist/leaflet.markercluster.layersupport.js"></script>
+  <!-- groupedlayercontrol  -->
+  <script src="dist/leaflet.groupedlayercontrol.min.js"></script>
   <!-- raster layers -->
-  <script src="https://ihcantabria.github.io/Leaflet.CanvasLayer.Field/dist/leaflet.canvaslayer.field.js"></script>
+  <script src="//unpkg.com/leaflet-canvaslayer-field/dist/leaflet.canvaslayer.field.js"></script>
   <!-- esri basemaps -->
   <script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"
      integrity="sha512-YZ6b5bXRVwipfqul5krehD9qlbJzc6KOGXYsDjU9HHXW2gK57xmWl2gU6nAegiErAqFXhygKIsWPKbjLPXVb2g=="
@@ -148,7 +151,32 @@
             });
 
     // control button
-      L.control.layers({
+    // Overlay layers are grouped
+     var Basemaps = {
+       "Imagery": im_bm,
+       "Topographic": tp_bm,
+     }
+     var groupedOverlays = {
+       "": {"Vector animation": layer},
+      "Rasters": {
+        "Velocity magnitude": magnitude,
+        "Thickness": thlayer,
+     },
+      "Others": {
+      "Tools": datalayer
+     }
+     };
+      var options = {
+      // Make the "Landmarks" group exclusive (use radio inputs)
+      // issue unable to unselect teh raster when it has been checked once
+        exclusiveGroups: ["Rasters"],
+      // Show a checkbox next to non-exclusive group labels for toggling all
+        groupCheckboxes: false,
+      //
+       collapsed: true
+      };
+       var layerControl = L.control.groupedLayers(Basemaps, groupedOverlays, options).addTo(map);
+    /*  L.control.layers({
 		     "Imagery": im_bm,
 		     "Topographic": tp_bm,},{
          "Vector animation": layer,
@@ -157,7 +185,7 @@
 		     "Tools": datalayer,},{
          position: 'topright',
          collapsed: false
-         }).addTo(map);
+       }).addTo(map); */
 
    //  create a custom control to ad a title and credential to the map
    // https://stackoverflow.com/questions/28316273/mapbox-map-styling-for-description-box/28319456#28319456
