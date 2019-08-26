@@ -1,6 +1,10 @@
 {
 "type": "FeatureCollection",
 "features": [
-{ "type": "Feature", "properties": { "id": 1, "popupContent": "Cavitometer" }, "geometry": { "type": "Point", "coordinates": [ 6.966163, 45.967124 ] } }
+{ "type": "Feature", "properties": { "id": 1, 
+                                     "popupContent": "Cavitometer",
+				     "description": "direct measurement of the sliding velocity at the base of the glacier"
+				     "picture": "data/Cavitometer.jpg" },
+                      "geometry": { "type": "Point", "coordinates": [ 6.966163, 45.967124 ] } }
 ]
 }

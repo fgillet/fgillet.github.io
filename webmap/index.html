@@ -73,8 +73,8 @@
  	var geojsonFeature=jQuery.getJSON('data/Cavitometer.geojson', function(data) {
 	   datalayer = L.geoJson(data, {
 	     onEachFeature: function (feature, layer) {
-	       layer.bindPopup('<a href="https://saussure.osug.fr/Cavitometer" target="_blank" >feature.popupContent</a> <br>'
-	       + photoImg);}});
+	       layer.bindPopup('<a href="https://saussure.osug.fr/Cavitometer" target="_blank" >feature.popupContent</a> <br>' + "feature.description <br>" 
+	       + '<img src=feature.picture height="150px" width="150px"/>');}});
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
         });
 
