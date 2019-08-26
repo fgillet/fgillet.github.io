@@ -68,15 +68,15 @@
 
 
 // test importing geoJson data
-	var photoImg = '<img src="data/Cavitometer.jpg" height="150px" width="150px"/>';
-
  	var geojsonFeature=jQuery.getJSON('data/Cavitometer.geojson', function(data) {
 	   datalayer = L.geoJson(data, {
 	     onEachFeature: function (feature, layer) {
-	       layer.bindPopup(feature.properties.popupContent + "<br>" +
+	       layer.bindPopup(
+	       '<a href="' + feature.properties.url  + '" target="_blank" >"'+ feature.properties.popupContent +'"</a> <br>'+
+	       feature.properties.description + "<br>" +
 	       '<img src="' + feature.properties.picture + '"height="150px" width="150px"/>');}});
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
-        });
+        }).addTo(map);
 
 // Thickness
   var thlayer = [];
@@ -171,7 +171,7 @@
         "Thickness": thlayer,
      },
       "Others": {
-      "Tools": datalayer
+      "Instruments": datalayer
      }
      };
       var options = {
@@ -190,7 +190,7 @@
          "Vector animation": layer,
          "Velocity magnitude": magnitude,
          "Thickness": thlayer,
-		     "Tools": datalayer,},{
+		     "Instruments": datalayer,},{
          position: 'topright',
          collapsed: false
        }).addTo(map); */
