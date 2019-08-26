@@ -74,7 +74,7 @@
 	   datalayer = L.geoJson(data, {
 	     onEachFeature: function (feature, layer) {
 	       layer.bindPopup(feature.properties.popupContent + "<br>" +
-	       '<img src=feature.properties.picture height="150px" width="150px"/>');}});
+	       '<img src='" + feature.properties.picture + "' height="150px" width="150px"/>');}});
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
         });
 
