@@ -42,7 +42,7 @@
 
 // define map, centered between Mer de glace and Argentiere
   let map = L.map("map",{
-	          center: [45.91,6.96],
+	          center: [45.941,7.004],
 	          zoom: 12,
 	          });
 
@@ -76,7 +76,7 @@
 	       feature.properties.description + "<br>" +
 	       '<img src="' + feature.properties.picture + '"height="150px" width="150px"/>');}});
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
-        }).addTo(map);
+        });
 
 // Thickness
   var thlayer = [];
