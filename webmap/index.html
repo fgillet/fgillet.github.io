@@ -68,13 +68,13 @@
 
 
 // test importing geoJson data
-	var photoImg = '<img src="data/picture.jpg" height="150px" width="150px"/>';
+	var photoImg = '<img src="data/Cavitometer.jpg" height="150px" width="150px"/>';
 
- 	var geojsonFeature=jQuery.getJSON('data/points.geojson', function(data) {
+ 	var geojsonFeature=jQuery.getJSON('data/Cavitometer.geojson', function(data) {
 	   datalayer = L.geoJson(data, {
 	     onEachFeature: function (feature, layer) {
-	       layer.bindPopup( "I am a GPS <br> I am not here but on <br>" +
-	       '<a href="http://astrolabe.osug.fr/index.php" target="_blank" >the Astrolabe Glacier </a> <br>'
+	       layer.bindPopup( "
+	       '<a href="https://saussure.osug.fr/Cavitometer" target="_blank" >Cavitometer</a> <br>'
 	       + photoImg);}});
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
         });
