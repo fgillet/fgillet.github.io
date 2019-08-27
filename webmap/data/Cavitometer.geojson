@@ -3,7 +3,7 @@
 "features": [
 { "type": "Feature", "properties": { "id": 1, 
                                      "popupContent": "Cavitometer",
-				     "description": "direct measurement of the sliding velocity at the base of the glacier",
+				     "description": "direct measurement of the sliding velocity <br> at the base of the glacier",
 				     "picture": "data/Cavitometer.jpg" ,
 				     "url": "https://saussure.osug.fr/Cavitometer" },
                       "geometry": { "type": "Point", "coordinates": [ 6.966163, 45.967124 ] } }

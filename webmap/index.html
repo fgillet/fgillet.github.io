@@ -72,7 +72,7 @@
 	   datalayer = L.geoJson(data, {
 	     onEachFeature: function (feature, layer) {
 	       layer.bindPopup(
-	       '<a href="' + feature.properties.url  + '" target="_blank" >"'+ feature.properties.popupContent +'"</a> <br>'+
+	       '<a href="' + feature.properties.url  + '" target="_blank" >'+ feature.properties.popupContent +'</a> <br>'+
 	       feature.properties.description + "<br>" +
 	       '<img src="' + feature.properties.picture + '"height="150px" width="150px"/>');}});
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
@@ -157,7 +157,9 @@
                velocityScale: 1 / 1000000,
                mouseMoveCursor: null
             });
-
+  
+     // automatically add instrument layer
+     map.addLayer(datalayer);
     // control button
     // Overlay layers are grouped
      var Basemaps = {
