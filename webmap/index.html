@@ -78,6 +78,27 @@
 	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
         });
 
+// add layer for Hot water drill
+       // define new icone style (cf https://github.com/pointhi/leaflet-color-markers)
+	var greenIcon = new L.Icon({
+          iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        });
+// add the layer
+ 	var HWDFeature=jQuery.getJSON('data/HotWaterDrills.geojson', function(data) {
+	   HWDlayer = L.geoJson(data,{
+	    onEachFeature: function (feature, layer) {
+               layer.bindPopup("<p>Hot Water Drill</p>");},
+	    pointToLayer: function(feature, latlng) {
+	     return L.marker(latlng, {icon:greenIcon});}
+	   });
+	   L.markerClusterGroup.layerSupport().addTo(map).checkIn(HWDlayer);
+	   });
+
 // Thickness
   var thlayer = [];
   var thbar = [];
@@ -160,6 +181,7 @@
   
      // automatically add instrument layer
      map.addLayer(datalayer);
+     map.addLayer(HWDlayer);
     // control button
     // Overlay layers are grouped
      var Basemaps = {
@@ -173,7 +195,8 @@
         "Thickness": thlayer,
      },
       "Others": {
-      "Instruments": datalayer
+      "Instruments": datalayer,
+      "others": HWDlayer,
      }
      };
       var options = {
@@ -192,7 +215,8 @@
          "Vector animation": layer,
          "Velocity magnitude": magnitude,
          "Thickness": thlayer,
-		     "Instruments": datalayer,},{
+	 "Instruments": datalayer,
+	 "others": HWDlayer},{
          position: 'topright',
          collapsed: false
        }).addTo(map); */
