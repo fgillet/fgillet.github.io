@@ -6,6 +6,12 @@
 				     "description": "direct measurement of the sliding velocity <br> at the base of the glacier",
 				     "picture": "data/Cavitometer.jpg" ,
 				     "url": "https://saussure.osug.fr/Cavitometer" },
-                      "geometry": { "type": "Point", "coordinates": [ 6.966163, 45.967124 ] } }
+                      "geometry": { "type": "Point", "coordinates": [ 6.966163, 45.967124 ] } },
+{ "type": "Feature", "properties": { "id": 2, 
+                                     "popupContent": "Automatic Weather Station",
+				     "description": "Measurement of meteorological variables",
+				     "picture": "data/aws.jpg" ,
+				     "url": "https://saussure.osug.fr/AWS" },
+                      "geometry": { "type": "Point", "coordinates": [ 6.9761111, 45.966722] } }
 ]
 }

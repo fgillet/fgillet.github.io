@@ -68,15 +68,19 @@
 
 
 // test importing geoJson data
- 	var geojsonFeature=jQuery.getJSON('data/Cavitometer.geojson', function(data) {
-	   datalayer = L.geoJson(data, {
-	     onEachFeature: function (feature, layer) {
+        // define the layer with null data
+        var datalayer = L.geoJson(null, {
+	       onEachFeature: function (feature, layer) {
 	       layer.bindPopup(
 	       '<a href="' + feature.properties.url  + '" target="_blank" >'+ feature.properties.popupContent +'</a> <br>'+
 	       feature.properties.description + "<br>" +
 	       '<img src="' + feature.properties.picture + '"height="150px" width="150px"/>');}});
-	      L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
+        // load the data
+ 	var geojsonFeature=jQuery.getJSON('data/Cavitometer.geojson', function(data) {
+	      datalayer.addData(data);
         });
+	// 
+        //L.markerClusterGroup.layerSupport().addTo(map).checkIn(datalayer);
 
 // add layer for Hot water drill
        // define new icone style (cf https://github.com/pointhi/leaflet-color-markers)
@@ -89,15 +93,20 @@
           shadowSize: [41, 41]
         });
 // add the layer
- 	var HWDFeature=jQuery.getJSON('data/HotWaterDrills.geojson', function(data) {
-	   HWDlayer = L.geoJson(data,{
+        var HWDlayer = L.geoJson(null,{
 	    onEachFeature: function (feature, layer) {
-               layer.bindPopup("<p>Hot Water Drill</p>");},
+               layer.bindPopup(
+	       '<a href="https://saussure.osug.fr/Hot-water-driller" target="_blank" > Hot water drills </a> <br>' +
+	       'boreholes drilled in september 2019<br>' +
+               '<img src="data/hwd.jpg" height="150px" width="150px"/>'
+	       );},
 	    pointToLayer: function(feature, latlng) {
 	     return L.marker(latlng, {icon:greenIcon});}
 	   });
-	   L.markerClusterGroup.layerSupport().addTo(map).checkIn(HWDlayer);
+ 	var HWDFeature=jQuery.getJSON('data/HotWaterDrills.geojson', function(data) {
+	   HWDlayer.addData(data);
 	   });
+        //L.markerClusterGroup.layerSupport().addTo(map).checkIn(HWDlayer);
 
 // Thickness
   var thlayer = [];
@@ -182,6 +191,7 @@
      // automatically add instrument layer
      map.addLayer(datalayer);
      map.addLayer(HWDlayer);
+
     // control button
     // Overlay layers are grouped
      var Basemaps = {
@@ -196,7 +206,7 @@
      },
       "Others": {
       "Instruments": datalayer,
-      "others": HWDlayer,
+      "Boreholes": HWDlayer,
      }
      };
       var options = {
@@ -216,7 +226,7 @@
          "Velocity magnitude": magnitude,
          "Thickness": thlayer,
 	 "Instruments": datalayer,
-	 "others": HWDlayer},{
+	 "Boreholes": HWDlayer},{
          position: 'topright',
          collapsed: false
        }).addTo(map); */
